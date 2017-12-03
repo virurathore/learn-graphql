@@ -6,15 +6,14 @@ import {
   GraphQLInt,
   GraphQLBoolean,
 } from 'graphql';
+import { globalIdField } from "graphql-relay";
 import {nodeInterface} from './node';
+
 const videoType = new GraphQLObjectType({
   name: 'VideoType',
   description: 'user define video type',
   fields: {
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-      description: 'video id',
-    },
+    id: globalIdField(),
     title: {
       type: GraphQLString,
       description: 'video title',
@@ -28,7 +27,7 @@ const videoType = new GraphQLObjectType({
       description: 'video has watched',
     },
   },
-  interfaces: [nodeInterface]
+  interfaces: () => [nodeInterface]
 });
 
 export default videoType;

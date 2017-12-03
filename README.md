@@ -252,3 +252,52 @@ const videoType = new GraphQLObjectType({
 
  *Error*
   Node.id expects type "ID!" but VideoType.id provides type "ID".
+
+  ## v12
+  using graphql-relay
+  ```
+
+import { nodeDefinitions, fromGlobalId } from "graphql-relay";
+import videoType from './videotype';
+import {getObjectById} from './data';
+
+const idFetcher = globalId => {
+  const {type, id} = fromGlobalId(globalId);
+  return getObjectById(type.toLowerCase(), id);
+};
+
+const typeResolver = obj => { // replace resolveType
+  if(obj.title) {
+    return videoType;
+  }
+  return null;
+}
+
+export const {nodeInterface, nodeField} = nodeDefinitions(
+  idFetcher,
+  typeResolver 
+);
+```
+implement getObjectById in data
+```
+const getObjectById = (type, id) => {
+  const types = {
+    video: getVideoById,
+  };
+  return types[type](id);
+}
+```
+add node as query field
+```
+  fields: {
+    node: nodeField,
+  }
+```
+change id to support globalid
+```
+const videoType = new GraphQLObjectType({
+  fields: {
+    id: globalIdField(),
+  }
+});
+````

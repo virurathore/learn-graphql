@@ -1,23 +1,21 @@
-import {
-  GraphQLInterfaceType,
-  GraphQLNonNull,
-  GraphQLID,
-} from 'graphql';
+
+import { nodeDefinitions, fromGlobalId } from "graphql-relay";
 import videoType from './videotype';
+import {getObjectById} from './data';
 
-const nodeInterface = new GraphQLInterfaceType({
-  name: 'Node',
-  fields: {
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-    }
-  },
-  resolveType: (object) => {
-    if(object.title) {
-      return videoType;
-    }
-    return null;
+const idFetcher = globalId => {
+  const {type, id} = fromGlobalId(globalId);
+  return getObjectById(type.toLowerCase(), id);
+};
+
+const typeResolver = obj => { // replace resolveType
+  if(obj.title) {
+    return videoType;
   }
-});
+  return null;
+}
 
-export { nodeInterface };
+export const {nodeInterface, nodeField} = nodeDefinitions(
+  idFetcher,
+  typeResolver 
+);

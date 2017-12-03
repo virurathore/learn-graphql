@@ -1,7 +1,7 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { getVideoById, getVideos, createVideo } from './data';
-
+import {nodeField} from './node';
 import { 
   GraphQLObjectType,
   GraphQLSchema,
@@ -23,6 +23,7 @@ const queryType = new GraphQLObjectType({
   name: 'QueryType',
   description: 'The root query type',
   fields: {
+    node: nodeField,
     video: {
       type: videoType,
       args: {
