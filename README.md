@@ -119,3 +119,14 @@ const getVideoById = (id) => new Promise((resolve) => {
   resolve(video);
 });
 ```
+
+## v07
+add GraphQLNonNull to argument, this argument can't be null.
+```
+  args: {
+    id: {
+      type: new GraphQLNonNull(GraphQLID),
+      description: 'video id which queried',
+    },
+  },
+```
