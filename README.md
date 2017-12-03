@@ -89,3 +89,33 @@ const schema = new GraphQLSchema({
 });
 
 ```  
+## v06
+  add argument to graphql query
+```
+const queryType = new GraphQLObjectType({
+  name: 'QueryType',
+  description: 'The root query type',
+  fields: {
+    video: {
+      type: videoType,
+      args: {
+        id: {
+          type: GraphQLID,
+          description: 'video id which queried',
+        },
+      },
+      resolve: (_, args) => {
+        return getVideoById(args.id);
+      }
+    },
+  }
+});
+``` 
+resolve query data 
+```
+const videos = [videoA, videoB];
+const getVideoById = (id) => new Promise((resolve) => {
+  const [video] = videos.filter(video => (video.id === id));
+  resolve(video);
+});
+```

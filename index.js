@@ -1,5 +1,6 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
+import getVideoById from './data';
 
 import { 
   GraphQLObjectType,
@@ -14,19 +15,6 @@ import {
 const PORT = process.env.PORT || 3000;
 const server = express();
 
-const videoA = {
-  id: '1',
-  title: 'bar',
-  duration: 180,
-  watched: false,
-};
-const videoB = {
-  id: '2',
-  title: 'foo',
-  duration: 200,
-  watched: true,
-};
-const videos = [videoA, videoB];
 
 const videoType = new GraphQLObjectType({
   name: 'VideoType',
@@ -57,20 +45,15 @@ const queryType = new GraphQLObjectType({
   fields: {
     video: {
       type: videoType,
-      resolve: () => new Promise((resolve) => {
-        resolve({
-          id: '1',
-          title: 'foo',
-          duration: 180,
-          watched: true,
-        });
-      }),
-    },
-    videos: {
-      type: new GraphQLList(videoType),
-      resolve: () => new Promise((resolve) => {
-        resolve(videos);
-      })
+      args: {
+        id: {
+          type: GraphQLID,
+          description: 'video id which queried',
+        },
+      },
+      resolve: (_, args) => {
+        return getVideoById(args.id);
+      }
     },
   }
 });
