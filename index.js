@@ -10,6 +10,7 @@ import {
   GraphQLBoolean,
   GraphQLID,
   GraphQLList,
+  GraphQLNonNull,
 } from "graphql";
 
 const PORT = process.env.PORT || 3000;
@@ -47,7 +48,7 @@ const queryType = new GraphQLObjectType({
       type: videoType,
       args: {
         id: {
-          type: GraphQLID,
+          type: new GraphQLNonNull(GraphQLID),
           description: 'video id which queried',
         },
       },
