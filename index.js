@@ -11,6 +11,7 @@ import {
   GraphQLID,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLInputObjectType,
 } from "graphql";
 
 const PORT = process.env.PORT || 3000;
@@ -62,6 +63,24 @@ const queryType = new GraphQLObjectType({
     }
   }
 });
+const videoInputType = new GraphQLInputObjectType({
+  name: 'videoInput',
+  description: 'video input for mutation',
+  fields: {
+    title: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'video title',
+    },
+    duration: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description: 'video duration',
+    },
+    released: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+      description: 'is this video released or not',
+    },
+  },
+});
 const mutaionType = new GraphQLObjectType({
   name: "mutation",
   description: 'The root mutation',
@@ -69,20 +88,11 @@ const mutaionType = new GraphQLObjectType({
     createVideo: {
       type: videoType,
       args: {
-        title: {
-          type: GraphQLString,
-          description: 'video title',
-        },
-        duration: {
-          type: GraphQLInt,
-          description: 'video duration',
-        },
-        released: {
-          type: GraphQLBoolean,
-          description: 'is this video released or not',
-        },
+        video: {
+          type: new GraphQLNonNull(videoInputType),
+        }
       },
-      resolve: (_, args) => createVideo(args),
+      resolve: (_, args) => createVideo(args.video),
     },
   },
 });

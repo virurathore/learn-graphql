@@ -183,3 +183,42 @@ mutation M {
   }
 }
 ```
+
+## v10
+adding GraphQLInputObjectType for mutation.
+
+```
+const videoInputType = new GraphQLInputObjectType({
+  name: 'videoInput',
+  description: 'video input for mutation',
+  fields: {
+    title: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'video title',
+    },
+    duration: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description: 'video duration',
+    },
+    released: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+      description: 'is this video released or not',
+    },
+  },
+});
+const mutaionType = new GraphQLObjectType({
+  name: "mutation",
+  description: 'The root mutation',
+  fields: {
+    createVideo: {
+      type: videoType,
+      args: {
+        video: {
+          type: new GraphQLNonNull(videoInputType),
+        }
+      },
+      resolve: (_, args) => createVideo(args.video),
+    },
+  },
+});
+```
