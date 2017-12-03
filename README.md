@@ -222,3 +222,33 @@ const mutaionType = new GraphQLObjectType({
   },
 });
 ```
+
+## v11
+adding support of graphql interfacetype
+```
+const nodeInterface = new GraphQLInterfaceType({
+  name: 'Node',
+  fields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLID),
+    }
+  },
+  resolveType: (object) => {
+    if(object.title) {
+      return videoType;
+    }
+    return null;
+  }
+});
+
+const videoType = new GraphQLObjectType({
+  name: 'VideoType',
+  ...
+  interfaces: [nodeInterface]
+})
+```
+*Error*
+ Interface Type Node does not provide a "resolveType" function and implementing Type VideoType does not provide a "isTypeOf" function. There is no way to resolve this implementing type during execution.
+
+ *Error*
+  Node.id expects type "ID!" but VideoType.id provides type "ID".
