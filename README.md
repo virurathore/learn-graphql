@@ -1,13 +1,14 @@
 # learn-graphql
-##v01
+
+## v01
   basic graphql
-##v02
+## v02
   grpahql schema
-##v03
+## v03
   data type and collection in graphql schema.
 
 npm install --save express express-graphql 
-#v04
+## v04
   setup graphql server using express
   running on
   http://localhost:3000/gqlVideos
@@ -33,3 +34,58 @@ query to run in graphiql editor
     title
   }
 }
+## v05
+  using GraphQLTypes to build schema
+```
+const videoType = new GraphQLObjectType({
+  name: 'VideoType',
+  description: 'user define video type',
+  fields: {
+    id: {
+      type: GraphQLID,
+      description: 'video id',
+    },
+    title: {
+      type: GraphQLString,
+      description: 'video title',
+    },
+    duration: {
+      type: GraphQLInt,
+      description: 'video duration',
+    },
+    watched: {
+      type: GraphQLBoolean,
+      description: 'video has watched',
+    },
+  },
+});
+const queryType = new GraphQLObjectType({
+  name: 'QueryType',
+  description: 'The root query type',
+  fields: {
+    video: {
+      type: videoType,
+      resolve: () => new Promise((resolve) => {
+        resolve({
+          id: '1',
+          title: 'foo',
+          duration: 180,
+          watched: true,
+        });
+      }),
+    },
+    videos: {
+      type: new GraphQLList(videoType),
+      resolve: () => new Promise((resolve) => {
+        resolve(videos);
+      })
+    },
+  }
+});
+const schema = new GraphQLSchema({
+  query: queryType,
+  // mutation,
+  // subscription,
+});
+
+```  
