@@ -222,3 +222,82 @@ const mutaionType = new GraphQLObjectType({
   },
 });
 ```
+
+## v11
+adding support of graphql interfacetype
+```
+const nodeInterface = new GraphQLInterfaceType({
+  name: 'Node',
+  fields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLID),
+    }
+  },
+  resolveType: (object) => {
+    if(object.title) {
+      return videoType;
+    }
+    return null;
+  }
+});
+
+const videoType = new GraphQLObjectType({
+  name: 'VideoType',
+  ...
+  interfaces: [nodeInterface]
+})
+```
+*Error*
+ Interface Type Node does not provide a "resolveType" function and implementing Type VideoType does not provide a "isTypeOf" function. There is no way to resolve this implementing type during execution.
+
+ *Error*
+  Node.id expects type "ID!" but VideoType.id provides type "ID".
+
+  ## v12
+  using graphql-relay
+  ```
+
+import { nodeDefinitions, fromGlobalId } from "graphql-relay";
+import videoType from './videotype';
+import {getObjectById} from './data';
+
+const idFetcher = globalId => {
+  const {type, id} = fromGlobalId(globalId);
+  return getObjectById(type.toLowerCase(), id);
+};
+
+const typeResolver = obj => { // replace resolveType
+  if(obj.title) {
+    return videoType;
+  }
+  return null;
+}
+
+export const {nodeInterface, nodeField} = nodeDefinitions(
+  idFetcher,
+  typeResolver 
+);
+```
+implement getObjectById in data
+```
+const getObjectById = (type, id) => {
+  const types = {
+    video: getVideoById,
+  };
+  return types[type](id);
+}
+```
+add node as query field
+```
+  fields: {
+    node: nodeField,
+  }
+```
+change id to support globalid
+```
+const videoType = new GraphQLObjectType({
+  fields: {
+    id: globalIdField(),
+  }
+});
+````
