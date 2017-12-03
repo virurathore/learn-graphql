@@ -1,31 +1,53 @@
 import { graphql, buildSchema } from "graphql";
 
 const schema = buildSchema(`
-type Query {
+type Video {
   id: ID,
   title: String,
   duration: Int,
   watched: Boolean,
+}
+type Query {
+  video: Video,
+  videos: [Video],
 }
 
 type Schema {
   query: Query
 }
 `);
+const videoA = {
+  id: '1',
+  title: 'bar',
+  duration: 180,
+  watched: false,
+};
+const videoB = {
+  id: '2',
+  title: 'foo',
+  duration: 200,
+  watched: true,
+};
+const videos = [videoA, videoB];
 
 const resolver = {
-  id: () => '1',
-  title: () => 'bar',
-  duration: () => 180,
-  watched: () => false,
+  video: () => ({
+    id: '2',
+    title: 'foo',
+    duration: 200,
+    watched: true,
+  }),
+  videos: () => videos,
 };
 
 const query = `
 query myFirstQuery {
-  id,
-  title,
-  duration,
-  watched
+  videos {
+    id,
+    title,
+    duration,
+    watched,
+  },
 }
 `;
 
