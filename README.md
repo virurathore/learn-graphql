@@ -130,3 +130,14 @@ add GraphQLNonNull to argument, this argument can't be null.
     },
   },
 ```
+
+## v08
+use GraphQLList to get all data
+```
+  fields: {
+    videos: {
+      type: new GraphQLList(videoType),
+      resolve: getVideos,
+    }
+  }
+```

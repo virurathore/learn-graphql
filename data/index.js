@@ -16,4 +16,8 @@ const getVideoById = (id) => new Promise((resolve) => {
   const [video] = videos.filter(video => (video.id === id));
   resolve(video);
 });
-export default getVideoById;
+const getVideos = () => new Promise(resolve => resolve(videos));
+export {
+  getVideoById,
+  getVideos
+};

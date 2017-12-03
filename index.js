@@ -1,6 +1,6 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
-import getVideoById from './data';
+import { getVideoById, getVideos } from './data';
 
 import { 
   GraphQLObjectType,
@@ -56,6 +56,10 @@ const queryType = new GraphQLObjectType({
         return getVideoById(args.id);
       }
     },
+    videos: {
+      type: new GraphQLList(videoType),
+      resolve: getVideos,
+    }
   }
 });
 const schema = new GraphQLSchema({
