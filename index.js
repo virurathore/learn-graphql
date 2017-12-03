@@ -1,6 +1,6 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
-import { getVideoById, getVideos } from './data';
+import { getVideoById, getVideos, createVideo } from './data';
 
 import { 
   GraphQLObjectType,
@@ -62,9 +62,33 @@ const queryType = new GraphQLObjectType({
     }
   }
 });
+const mutaionType = new GraphQLObjectType({
+  name: "mutation",
+  description: 'The root mutation',
+  fields: {
+    createVideo: {
+      type: videoType,
+      args: {
+        title: {
+          type: GraphQLString,
+          description: 'video title',
+        },
+        duration: {
+          type: GraphQLInt,
+          description: 'video duration',
+        },
+        released: {
+          type: GraphQLBoolean,
+          description: 'is this video released or not',
+        },
+      },
+      resolve: (_, args) => createVideo(args),
+    },
+  },
+});
 const schema = new GraphQLSchema({
   query: queryType,
-  // mutation,
+  mutation: mutaionType,
   // subscription,
 });
 

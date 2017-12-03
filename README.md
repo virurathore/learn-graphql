@@ -141,3 +141,45 @@ use GraphQLList to get all data
     }
   }
 ```
+
+## v09
+creating mutation type
+```
+const mutaionType = new GraphQLObjectType({
+  name: "mutation",
+  description: 'The root mutation',
+  fields: {
+    createVideo: {
+      type: videoType,
+      args: {
+        title: {
+          type: GraphQLString,
+          description: 'video title',
+        },
+        duration: {
+          type: GraphQLInt,
+          description: 'video duration',
+        },
+        released: {
+          type: GraphQLBoolean,
+          description: 'is this video released or not',
+        },
+      },
+      resolve: (_, args) => createVideo(args),
+    },
+  },
+});
+const schema = new GraphQLSchema({
+  query: queryType,
+  mutation: mutaionType,
+  // subscription,
+});
+```
+running mutation in graphiql
+```
+mutation M {
+  createVideo(title: "viru", duration: 400, released: false) {
+    id, title, duration
+  }
+}
+```
